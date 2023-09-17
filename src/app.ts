@@ -1,7 +1,9 @@
-import express, { Express, Request, Response } from "express";
+import "dotenv/config";
+import express, { Express } from "express";
 import { notFoundMiddleware, errorHandlerMiddleware } from "./middlewares";
 import authRouter from "./routes/auth";
 import jobsRouter from "./routes/jobs";
+import { connectDB } from "./db/connect";
 
 const app: Express = express();
 
@@ -13,8 +15,15 @@ app.use("/api/v1/jobs", jobsRouter);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-app.get("/", (req: Request, res: Response) => {
-  return res.send("Home page");
-});
+const port = process.env.PORT || 5000;
 
-app.listen(3000, () => console.log(`Server is listening on port 3000`));
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI!);
+    app.listen(port, () => console.log(`Server is listening on port ${port}`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
