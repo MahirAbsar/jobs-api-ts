@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "express-async-errors";
 import express, { Express } from "express";
 import { notFoundMiddleware, errorHandlerMiddleware } from "./middlewares";
 import authRouter from "./routes/auth";

@@ -13,7 +13,10 @@ export const register = async (
   res: Response
 ) => {
   const user = await User.create({ ...req.body });
-  return res.status(StatusCodes.CREATED).json({ user });
+  const token = (user as any).createJwt();
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ user: { name: user.name }, token });
 };
 
 export const login = async (req: Request, res: Response) => {

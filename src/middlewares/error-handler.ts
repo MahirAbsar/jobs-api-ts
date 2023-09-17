@@ -9,9 +9,7 @@ export const errorHandlerMiddleware = (
   next: NextFunction
 ) => {
   if (err instanceof BadRequestError || err instanceof UnauthenticatedError) {
-    return res.status(err.statusCode).json({ msg: err.message });
+    return res.status(err.statusCode).json({ err: err.message });
   }
-  return res
-    .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ msg: "Something went wrong" });
+  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err });
 };
