@@ -4,7 +4,9 @@ exports.errorHandlerMiddleware = void 0;
 const errors_1 = require("../errors");
 const http_status_codes_1 = require("http-status-codes");
 const errorHandlerMiddleware = (err, req, res, next) => {
-    if (err instanceof errors_1.BadRequestError || err instanceof errors_1.UnauthenticatedError) {
+    if (err instanceof errors_1.BadRequestError ||
+        err instanceof errors_1.UnauthenticatedError ||
+        err instanceof errors_1.NotFoundError) {
         return res.status(err.statusCode).json({ err: err.message });
     }
     return res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({ err });

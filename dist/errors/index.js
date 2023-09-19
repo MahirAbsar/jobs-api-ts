@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./custom-api"), exports);
 __exportStar(require("./bad-request"), exports);
 __exportStar(require("./unauthemticated"), exports);
+__exportStar(require("./not-found"), exports);
