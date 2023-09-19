@@ -13,7 +13,7 @@ const connect_1 = require("./db/connect");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use("/api/v1/auth", auth_1.default);
-app.use("/api/v1/jobs", jobs_1.default);
+app.use("/api/v1/jobs", middlewares_1.authenticationMiddleware, jobs_1.default);
 app.use(middlewares_1.notFoundMiddleware);
 app.use(middlewares_1.errorHandlerMiddleware);
 const port = process.env.PORT || 5000;

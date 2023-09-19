@@ -1,7 +1,11 @@
 import "dotenv/config";
 import "express-async-errors";
 import express, { Express } from "express";
-import { notFoundMiddleware, errorHandlerMiddleware } from "./middlewares";
+import {
+  notFoundMiddleware,
+  errorHandlerMiddleware,
+  authenticationMiddleware,
+} from "./middlewares";
 import authRouter from "./routes/auth";
 import jobsRouter from "./routes/jobs";
 import { connectDB } from "./db/connect";
@@ -11,7 +15,7 @@ const app: Express = express();
 app.use(express.json());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobsRouter);
+app.use("/api/v1/jobs", authenticationMiddleware, jobsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

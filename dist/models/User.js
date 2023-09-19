@@ -36,4 +36,8 @@ userSchema.pre("save", async function () {
 userSchema.methods.createJwt = function () {
     return jsonwebtoken_1.default.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFETIME });
 };
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    const isMatch = await bcryptjs_1.default.compare(candidatePassword, this.password);
+    return isMatch;
+};
 exports.User = mongoose_1.default.model("User", userSchema);
