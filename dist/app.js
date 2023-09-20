@@ -14,6 +14,8 @@ const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const express_xss_sanitizer_1 = require("express-xss-sanitizer");
 const express_rate_limit_1 = require("express-rate-limit");
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const yamljs_1 = __importDefault(require("yamljs"));
 const app = (0, express_1.default)();
 app.set("trust proxy", 1);
 const limiter = (0, express_rate_limit_1.rateLimit)({
@@ -27,6 +29,11 @@ app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
 app.use((0, express_xss_sanitizer_1.xss)());
+const swaggerDocument = yamljs_1.default.load("swagger.yaml");
+app.get('/', (req, res) => {
+    return res.send("<h1>Jobs API</h1><a href='/api-doc'>Documentation<a/>");
+});
+app.use("/api-doc", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 app.use("/api/v1/auth", auth_1.default);
 app.use("/api/v1/jobs", middlewares_1.authenticationMiddleware, jobs_1.default);
 app.use(middlewares_1.notFoundMiddleware);

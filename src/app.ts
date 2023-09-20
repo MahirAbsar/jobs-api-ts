@@ -1,6 +1,6 @@
 import "dotenv/config";
 import "express-async-errors";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import {
   notFoundMiddleware,
   errorHandlerMiddleware,
@@ -13,6 +13,9 @@ import helmet from "helmet";
 import cors from "cors";
 import { xss } from "express-xss-sanitizer";
 import { rateLimit } from "express-rate-limit";
+import swaggerUI from "swagger-ui-express";
+import YAML from "yamljs";
+
 
 const app: Express = express();
 
@@ -29,7 +32,12 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(xss());
+const swaggerDocument = YAML.load("swagger.yaml");
 
+app.get('/', (req:Request, res: Response) => {
+  return res.send("<h1>Jobs API</h1><a href='/api-doc'>Documentation<a/>")
+});
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticationMiddleware, jobsRouter);
 
