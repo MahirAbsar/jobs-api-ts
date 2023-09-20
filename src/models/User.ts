@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 const { Schema } = mongoose;
 
-
 const userSchema = new Schema({
   name: {
     type: String,
@@ -18,6 +17,7 @@ const userSchema = new Schema({
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       "Please provide a valid email",
     ],
+    required: [true, "Please provide email"],
     unique: true,
   },
   password: {
@@ -40,9 +40,11 @@ userSchema.methods.createJwt = function (): string {
   );
 };
 
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
-  const isMatch = await bcrypt.compare(candidatePassword, this.password)
-  return isMatch
-}
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  return isMatch;
+};
 
 export const User = mongoose.model("User", userSchema);
