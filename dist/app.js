@@ -10,8 +10,23 @@ const middlewares_1 = require("./middlewares");
 const auth_1 = __importDefault(require("./routes/auth"));
 const jobs_1 = __importDefault(require("./routes/jobs"));
 const connect_1 = require("./db/connect");
+const helmet_1 = __importDefault(require("helmet"));
+const cors_1 = __importDefault(require("cors"));
+const express_xss_sanitizer_1 = require("express-xss-sanitizer");
+const express_rate_limit_1 = require("express-rate-limit");
 const app = (0, express_1.default)();
+app.set("trust proxy", 1);
+const limiter = (0, express_rate_limit_1.rateLimit)({
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+});
+app.use(limiter);
 app.use(express_1.default.json());
+app.use((0, helmet_1.default)());
+app.use((0, cors_1.default)());
+app.use((0, express_xss_sanitizer_1.xss)());
 app.use("/api/v1/auth", auth_1.default);
 app.use("/api/v1/jobs", middlewares_1.authenticationMiddleware, jobs_1.default);
 app.use(middlewares_1.notFoundMiddleware);
